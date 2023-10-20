@@ -1,0 +1,85 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package Model;
+
+import static Model.config.stmt;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+//inheretence
+public class dokter_action extends dokter{ 
+    public dokter_action (String nm, String al, String kp, String up, String jk, String ls){
+
+    //       CONSTRUCTOR
+           setNm(nm);
+           setAl(al);
+           setKp(kp);
+           setUp(up);
+           setJk(jk);
+           setLs(ls);
+        }
+
+    //    PHOLYMORPHISM
+        @Override
+        public ResultSet insertData(dokter_action object){
+        try {
+            String sql = "INSERT INTO tb_apotik (NAMA, ALAMAT, PENYAKIT, UMUR, JENIS_KELAMIN, LAMA) VALUE('%s', '%s', '%s', '%s', '%s', '%s')";
+            sql = String.format(sql, object.getNm(), object.getAl(), object.getKp(), object.getUp(), object.getJk(), object.getLs());
+            stmt.execute(sql);
+            System.out.println("BERHASIL MEMESAN");
+        } catch (SQLException e) {
+            System.out.println("GAGAL MEMESAN : "+e.getMessage());
+        }
+        return null;
+        }
+
+        public  ResultSet Tampil(){
+           try {
+           String sql = "SELECT * FROM tb_apotik";
+           ResultSet rs = stmt.executeQuery(sql);
+           return rs;
+         } catch (SQLException e) {
+           System.out.println("Error tampil data: "+e.getMessage());
+         }
+         return null;
+        }
+
+         public static void updateData(String pilih_umur, dokter_action object){
+        try {
+           String sql = "UPDATE tb_apotik SET NAMA = '%s', ALAMAT = '%s', PENYAKIT = '%s', UMUR = '%s', JENIS_KELAMIN = '%s', LAMA = '%s' WHERE UMUR = '%s'";
+           sql = String.format(sql, object.getNm(), object.getAl(), object.getKp(), object.getUp(), object.getJk(), object.getLs(), pilih_umur);
+            stmt.execute(sql);
+            System.out.println("Sukses update data");
+        } catch (SQLException e) {
+            System.out.println("Error update data: "+e.getMessage());
+        }
+        }
+
+        public  void deleteData(String pilih_umur){
+        try {
+            String sql = "DELETE FROM tb_apotik WHERE UMUR = '%s'";
+            sql = String.format(sql, pilih_umur);
+            stmt.execute(sql);
+            System.out.println("Sukses hapus data");
+        } catch (SQLException e) {
+            System.out.println("Error hapus data: "+e.getMessage());
+        }
+    }   
+        public static ResultSet cari(String pilih_umur){
+            try {
+                String sql = "SELECT * FROM tb_apotik WHERE UMUR = '%s'";
+                sql = String.format(sql, pilih_umur);
+                ResultSet rs = stmt.executeQuery(sql);
+                if (!rs.next()){
+                    System.out.println("data tidak ditemukan");
+                }else{
+                    return rs;
+                }
+            } catch (SQLException e) {
+                System.err.println("Error tampil data");
+            }
+            return null;
+        }
+}
